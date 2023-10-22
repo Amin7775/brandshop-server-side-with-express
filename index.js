@@ -34,18 +34,31 @@ async function run() {
 
     const database = client.db("BrandShop")
     const brandCollection = database.collection("Brands")
+    const productCollection = database.collection("Products")
 
-    //get database details and show (brandCollection)
-    // app.get('/brand', async(req,res)=>{
-    //     const cursor = brandCollection.find();
-    //     const result = await cursor.toArray();
-    //     res.send(result)
-    // })
+    //get route from db to fetch brands on homepage
     app.get('/brand', async(req,res)=>{
         const cursor = brandCollection.find()
         const result = await cursor.toArray();
         res.send(result)
       })
+
+    //Add Products section - start
+    //post
+    app.post('/products', async(req,res)=>{
+      const newProduct = req.body;
+      // console.log(newProduct)
+      const result = await productCollection.insertOne(newProduct)
+      res.send(result)
+    })
+
+    //get
+    app.get('/products', async(req,res)=>{
+      const cursor = productCollection.find()
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+    //Add Products section - end
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
