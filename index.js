@@ -35,6 +35,7 @@ async function run() {
     const database = client.db("BrandShop")
     const brandCollection = database.collection("Brands")
     const productCollection = database.collection("Products")
+    const cartCollection = database.collection("Cart")
 
     //get route from db to fetch brands on homepage
     app.get('/brand', async(req,res)=>{
@@ -88,6 +89,20 @@ async function run() {
 
       const result = await productCollection.updateOne(filter,updatedProducts,options)
 
+      res.send(result)
+    })
+
+    //Add to cart route 
+    //get data from web (post)
+    app.post('/cart', async(req,res)=>{
+      const loadedAddToCart = req.body;
+      const result = await cartCollection.insertOne(loadedAddToCart)
+      res.send(result)
+    })
+    //read data on backend route(get)
+    app.get('/cart', async (req,res)=>{
+      const cursor = cartCollection.find()
+      const result = await cursor.toArray()
       res.send(result)
     })
 
